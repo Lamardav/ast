@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const parser = require('@babel/parser');
-const traverse = require('@babel/traverse').default;
+const fs = require("fs");
+const path = require("path");
+const parser = require("@babel/parser");
+const traverse = require("@babel/traverse").default;
 
 const PRESENTATION_WEIGHTS = {
   simpleJSX: 0.2,
@@ -35,17 +35,33 @@ const NETWORK_LAYER_BONUS = {
   fetchBaseQuery: 10,
   setupListeners: 8,
 };
-const EXPORT_OBJ_MULTIPLIER = 2; 
+const EXPORT_OBJ_MULTIPLIER = 2;
 const BASE_UI_COST = 3;
 const SCALING_FACTOR = 0.1;
 
 function isTypeDeclaration(node) {
-  return node.type === 'TSInterfaceDeclaration' || node.type === 'TSTypeAliasDeclaration';
+  return node.type === "TSInterfaceDeclaration" || node.type === "TSTypeAliasDeclaration";
 }
 
 const SIMPLE_HTML_TAGS = new Set([
-  'div', 'span', 'p', 'img', 'a', 'button', 'ul', 'li', 'ol', 'table',
-  'tr', 'td', 'form', 'header', 'footer', 'section', 'article', 'label',
+  "div",
+  "span",
+  "p",
+  "img",
+  "a",
+  "button",
+  "ul",
+  "li",
+  "ol",
+  "table",
+  "tr",
+  "td",
+  "form",
+  "header",
+  "footer",
+  "section",
+  "article",
+  "label",
 ]);
 
 function isSimpleHtmlTag(name) {
@@ -53,70 +69,65 @@ function isSimpleHtmlTag(name) {
 }
 
 function hasSignificantProps(attributes) {
-  return attributes.some(attr => {
+  return attributes.some((attr) => {
     if (!attr.name) return false;
     const propName = attr.name.name;
-    return !['key', 'ref', 'className', 'style'].includes(propName);
+    return !["key", "ref", "className", "style"].includes(propName);
   });
 }
 
 function isFormMethodCall(node) {
   return (
-    node.type === 'MemberExpression' &&
+    node.type === "MemberExpression" &&
     node.object &&
-    node.object.name === 'form' &&
-    (node.property.name === 'validateFields' ||
-     node.property.name === 'getFieldValue' ||
-     node.property.name === 'setFieldsValue')
+    node.object.name === "form" &&
+    (node.property.name === "validateFields" ||
+      node.property.name === "getFieldValue" ||
+      node.property.name === "setFieldsValue")
   );
 }
 
 function checkAsyncLogic(node) {
   let count = 0;
-  if ((node.type === 'FunctionDeclaration' || node.type === 'ArrowFunctionExpression') && node.async)
-    count++;
-  if (node.type === 'AwaitExpression') count++;
-  if (node.type === 'MemberExpression' && (node.property.name === 'then' || node.property.name === 'catch'))
-    count++;
+  if ((node.type === "FunctionDeclaration" || node.type === "ArrowFunctionExpression") && node.async) count++;
+  if (node.type === "AwaitExpression") count++;
+  if (node.type === "MemberExpression" && (node.property.name === "then" || node.property.name === "catch")) count++;
   return count;
 }
 
 function checkStateManagement(node) {
-  if (node.type === 'Identifier') {
+  if (node.type === "Identifier") {
     const name = node.name;
-    if (name === 'useState' || name === 'setState' || name === 'useReducer' || name === 'useSelector')
-      return 1;
+    if (name === "useState" || name === "setState" || name === "useReducer" || name === "useSelector") return 1;
   }
   return 0;
 }
 
 function checkReactHookCall(node) {
-  if (node.type === 'CallExpression' && node.callee.type === 'Identifier') {
+  if (node.type === "CallExpression" && node.callee.type === "Identifier") {
     const name = node.callee.name;
-    if (name === 'useEffect') return REACT_HOOK_WEIGHTS.useEffect;
-    if (name === 'useMemo' || name === 'useCallback') return REACT_HOOK_WEIGHTS.useMemoOrCallback;
+    if (name === "useEffect") return REACT_HOOK_WEIGHTS.useEffect;
+    if (name === "useMemo" || name === "useCallback") return REACT_HOOK_WEIGHTS.useMemoOrCallback;
   }
   return 0;
 }
 
 function checkFileUpload(node) {
-  if (node.type === 'Identifier' && (node.name === 'uploadRequest' || node.name === 'FileReader'))
-    return 1;
+  if (node.type === "Identifier" && (node.name === "uploadRequest" || node.name === "FileReader")) return 1;
   return 0;
 }
 
 function checkBusinessLogic(node) {
-  if (node.type === 'Identifier' && (node.name === 'deepMerge' || node.name === 'combineReducers'))
-    return 1;
+  if (node.type === "Identifier" && (node.name === "deepMerge" || node.name === "combineReducers")) return 1;
   return 0;
 }
 
 function checkModalUsage(nodeName) {
-  return ['Modal', 'Drawer', 'Dialog'].includes(nodeName) ? 1 : 0;
+  return ["Modal", "Drawer", "Dialog"].includes(nodeName) ? 1 : 0;
 }
 
 function analyzeCssComplexity(templateLiteral) {
-  const rawCss = templateLiteral.quasis.map(q => q.value.cooked).join('\n');
+  const rawCss = templateLiteral.quasis.map((q) => q.value.cooked).join("\n");
   let additionalComplexity = 0;
   const pseudoMatches = rawCss.match(/&:[\w-]+/g);
   if (pseudoMatches) additionalComplexity += pseudoMatches.length * 0.6;
@@ -130,15 +141,15 @@ function analyzeCssComplexity(templateLiteral) {
     animation: 0.9,
     transition: 0.9,
     transform: 0.9,
-    'box-shadow': 0.9,
+    "box-shadow": 0.9,
     filter: 0.9,
-    'background-image': 0.7,
+    "background-image": 0.7,
   };
   const DEFAULT_PROPERTY_WEIGHT = 0.15;
-  const declarations = rawCss.split(';');
+  const declarations = rawCss.split(";");
   for (let decl of declarations) {
     decl = decl.trim();
-    if (!decl || decl.startsWith('@media') || decl.startsWith('}') || decl.includes('{')) continue;
+    if (!decl || decl.startsWith("@media") || decl.startsWith("}") || decl.includes("{")) continue;
     const match = decl.match(/^([\w-]+)\s*:\s*(.+)$/);
     if (match) {
       const property = match[1].toLowerCase();
@@ -151,10 +162,10 @@ function analyzeCssComplexity(templateLiteral) {
 
 function isStyledComponentsTaggedTemplate(node) {
   return (
-    node.type === 'TaggedTemplateExpression' &&
+    node.type === "TaggedTemplateExpression" &&
     node.tag &&
-    node.tag.type === 'MemberExpression' &&
-    node.tag.object.name === 'styled'
+    node.tag.type === "MemberExpression" &&
+    node.tag.object.name === "styled"
   );
 }
 
@@ -170,25 +181,38 @@ function computeCognitiveComplexity(path) {
       enter(p) {
         if (isTypeDeclaration(p.node)) return;
         switch (p.node.type) {
-          case 'IfStatement':
-            incrementComplexity(); nestingLevel++; break;
-          case 'ForStatement':
-          case 'ForInStatement':
-          case 'ForOfStatement':
-          case 'WhileStatement':
-            incrementComplexity(); nestingLevel++; break;
-          case 'SwitchCase':
-            incrementComplexity(); break;
-          case 'ConditionalExpression':
-            incrementComplexity(); break;
-          case 'LogicalExpression':
-            incrementComplexity(); break;
-          default: break;
+          case "IfStatement":
+            incrementComplexity();
+            nestingLevel++;
+            break;
+          case "ForStatement":
+          case "ForInStatement":
+          case "ForOfStatement":
+          case "WhileStatement":
+            incrementComplexity();
+            nestingLevel++;
+            break;
+          case "SwitchCase":
+            incrementComplexity();
+            break;
+          case "ConditionalExpression":
+            incrementComplexity();
+            break;
+          case "LogicalExpression":
+            incrementComplexity();
+            break;
+          default:
+            break;
         }
       },
       exit(p) {
-        if (p.node.type === 'IfStatement' || p.node.type === 'ForStatement' ||
-            p.node.type === 'ForInStatement' || p.node.type === 'ForOfStatement' || p.node.type === 'WhileStatement')
+        if (
+          p.node.type === "IfStatement" ||
+          p.node.type === "ForStatement" ||
+          p.node.type === "ForInStatement" ||
+          p.node.type === "ForOfStatement" ||
+          p.node.type === "WhileStatement"
+        )
           nestingLevel--;
       },
     },
@@ -206,17 +230,18 @@ function computeCyclomaticComplexity(path) {
       enter(p) {
         if (isTypeDeclaration(p.node)) return;
         switch (p.node.type) {
-          case 'IfStatement':
-          case 'ForStatement':
-          case 'ForInStatement':
-          case 'ForOfStatement':
-          case 'WhileStatement':
-          case 'ConditionalExpression':
-          case 'LogicalExpression':
-          case 'SwitchCase':
+          case "IfStatement":
+          case "ForStatement":
+          case "ForInStatement":
+          case "ForOfStatement":
+          case "WhileStatement":
+          case "ConditionalExpression":
+          case "LogicalExpression":
+          case "SwitchCase":
             decisions++;
             break;
-          default: break;
+          default:
+            break;
         }
       },
     },
@@ -227,17 +252,17 @@ function computeCyclomaticComplexity(path) {
 }
 
 function getJSXElementName(nodeName) {
-  if (nodeName.type === 'JSXIdentifier') return nodeName.name;
-  if (nodeName.type === 'JSXMemberExpression')
+  if (nodeName.type === "JSXIdentifier") return nodeName.name;
+  if (nodeName.type === "JSXMemberExpression")
     return `${getJSXElementName(nodeName.object)}.${getJSXElementName(nodeName.property)}`;
-  return '';
+  return "";
 }
 
 function getJSXDepth(path) {
   let depth = 0;
   let current = path;
   while (current.parentPath) {
-    if (current.parentPath.node.type === 'JSXElement') depth++;
+    if (current.parentPath.node.type === "JSXElement") depth++;
     current = current.parentPath;
   }
   return depth;
@@ -247,9 +272,8 @@ function computeObjectComplexity(node) {
   let complexity = 0;
   if (node.properties && node.properties.length > 0) {
     complexity += node.properties.length;
-    node.properties.forEach(prop => {
-      if (prop.value && prop.value.type === 'ObjectExpression')
-        complexity += computeObjectComplexity(prop.value) * 0.5;
+    node.properties.forEach((prop) => {
+      if (prop.value && prop.value.type === "ObjectExpression") complexity += computeObjectComplexity(prop.value) * 0.5;
     });
   }
   return complexity;
@@ -259,12 +283,12 @@ function computeExportedObjectsComplexity(ast) {
   let exportScore = 0;
   traverse(ast, {
     ExportNamedDeclaration(path) {
-      if (path.node.declaration && path.node.declaration.type === 'VariableDeclaration')
-        path.node.declaration.declarations.forEach(declarator => {
-          if (declarator.init && declarator.init.type === 'ObjectExpression')
+      if (path.node.declaration && path.node.declaration.type === "VariableDeclaration")
+        path.node.declaration.declarations.forEach((declarator) => {
+          if (declarator.init && declarator.init.type === "ObjectExpression")
             exportScore += computeObjectComplexity(declarator.init);
         });
-    }
+    },
   });
   return exportScore;
 }
@@ -278,8 +302,8 @@ function analyzeComplexity(ast) {
   traverse(ast, {
     ImportDeclaration(path) {
       const src = path.node.source.value;
-      if (src.includes('@reduxjs/toolkit/query')) externalLibScore += NETWORK_LAYER_BONUS.createApi;
-      else if (src.includes('@reduxjs/toolkit')) externalLibScore += NETWORK_LAYER_BONUS.fetchBaseQuery;
+      if (src.includes("@reduxjs/toolkit/query")) externalLibScore += NETWORK_LAYER_BONUS.createApi;
+      else if (src.includes("@reduxjs/toolkit")) externalLibScore += NETWORK_LAYER_BONUS.fetchBaseQuery;
     },
     TSInterfaceDeclaration(path) {},
     TSTypeAliasDeclaration(path) {},
@@ -291,8 +315,8 @@ function analyzeComplexity(ast) {
       if (isSimpleHtmlTag(nodeName)) totalScore += PRESENTATION_WEIGHTS.simpleJSX;
       if (path.node.attributes && hasSignificantProps(path.node.attributes))
         totalScore += PRESENTATION_WEIGHTS.jsxWithProps;
-      path.node.attributes.forEach(attr => {
-        if (attr.type === 'JSXSpreadAttribute') totalScore += PRESENTATION_WEIGHTS.jsxSpreadAttribute;
+      path.node.attributes.forEach((attr) => {
+        if (attr.type === "JSXSpreadAttribute") totalScore += PRESENTATION_WEIGHTS.jsxSpreadAttribute;
       });
       totalScore += checkModalUsage(nodeName) * LOGIC_WEIGHTS.modalUsage;
       const depth = getJSXDepth(path);
@@ -300,23 +324,21 @@ function analyzeComplexity(ast) {
     },
     JSXExpressionContainer(path) {
       if (path.node.expression) {
-        if (path.node.expression.type === 'ConditionalExpression') totalScore += PRESENTATION_WEIGHTS.dynamicJSX;
-        if (path.node.expression.type === 'ArrowFunctionExpression') totalScore += 0.5;
+        if (path.node.expression.type === "ConditionalExpression") totalScore += PRESENTATION_WEIGHTS.dynamicJSX;
+        if (path.node.expression.type === "ArrowFunctionExpression") totalScore += 0.5;
       }
     },
     enter(path) {
       const { node } = path;
-      if (node.type === 'CallExpression' && node.callee.type === 'Identifier') {
+      if (node.type === "CallExpression" && node.callee.type === "Identifier") {
         const calleeName = node.callee.name;
-        if (calleeName === 'createApi') totalScore += NETWORK_LAYER_BONUS.createApi;
-        else if (calleeName === 'fetchBaseQuery') totalScore += NETWORK_LAYER_BONUS.fetchBaseQuery;
-        else if (calleeName === 'setupListeners') totalScore += NETWORK_LAYER_BONUS.setupListeners;
+        if (calleeName === "createApi") totalScore += NETWORK_LAYER_BONUS.createApi;
+        else if (calleeName === "fetchBaseQuery") totalScore += NETWORK_LAYER_BONUS.fetchBaseQuery;
+        else if (calleeName === "setupListeners") totalScore += NETWORK_LAYER_BONUS.setupListeners;
       }
-      if (node.type === 'MemberExpression' && isFormMethodCall(node))
-        totalScore += LOGIC_WEIGHTS.formLogic;
+      if (node.type === "MemberExpression" && isFormMethodCall(node)) totalScore += LOGIC_WEIGHTS.formLogic;
       totalScore += checkAsyncLogic(node) * LOGIC_WEIGHTS.asyncLogic;
-      if (node.type === 'Identifier')
-        totalScore += checkStateManagement(node) * LOGIC_WEIGHTS.stateManagement;
+      if (node.type === "Identifier") totalScore += checkStateManagement(node) * LOGIC_WEIGHTS.stateManagement;
       totalScore += checkFileUpload(node) * LOGIC_WEIGHTS.fileUpload;
       totalScore += checkBusinessLogic(node) * LOGIC_WEIGHTS.businessLogic;
       totalScore += checkReactHookCall(node);
@@ -327,27 +349,32 @@ function analyzeComplexity(ast) {
       }
     },
     VariableDeclarator(path) {
-      if (path.node.id.type === 'Identifier') {
+      if (path.node.id.type === "Identifier") {
         const varName = path.node.id.name;
-        totalScore += varName.startsWith('use') ? HOOK_VARIABLE_COST : NON_HOOK_VARIABLE_COST;
+        totalScore += varName.startsWith("use") ? HOOK_VARIABLE_COST : NON_HOOK_VARIABLE_COST;
       }
     },
     FunctionDeclaration(path) {
       if (isTypeDeclaration(path.node)) return;
-      const funcName = path.node.id ? path.node.id.name : '<anonymous>';
+      const funcName = path.node.id ? path.node.id.name : "<anonymous>";
       const cognitive = computeCognitiveComplexity(path);
       const cyclomatic = computeCyclomaticComplexity(path);
       functionComplexities.push({ name: funcName, cognitive, cyclomatic });
-      totalScore += (cognitive * COGNITIVE_MULTIPLIER + cyclomatic * CYCL_MULTIPLIER);
+      totalScore += cognitive * COGNITIVE_MULTIPLIER + cyclomatic * CYCL_MULTIPLIER;
     },
     ArrowFunctionExpression(path) {
       const cognitive = computeCognitiveComplexity(path);
       const cyclomatic = computeCyclomaticComplexity(path);
-      let funcName = '<arrow>';
-      if (path.parent && path.parent.type === 'VariableDeclarator' && path.parent.id && path.parent.id.type === 'Identifier')
+      let funcName = "<arrow>";
+      if (
+        path.parent &&
+        path.parent.type === "VariableDeclarator" &&
+        path.parent.id &&
+        path.parent.id.type === "Identifier"
+      )
         funcName = path.parent.id.name;
       functionComplexities.push({ name: funcName, cognitive, cyclomatic });
-      totalScore += (cognitive * COGNITIVE_MULTIPLIER + cyclomatic * CYCL_MULTIPLIER);
+      totalScore += cognitive * COGNITIVE_MULTIPLIER + cyclomatic * CYCL_MULTIPLIER;
     },
   });
   const exportObjScore = computeExportedObjectsComplexity(ast);
@@ -359,28 +386,28 @@ function analyzeComplexity(ast) {
 }
 
 function main() {
-  const filePath = path.resolve(__dirname, '11.js');
+  const filePath = path.resolve(__dirname, "3.jsx");
   if (!fs.existsSync(filePath)) {
     console.error(`File not found: ${filePath}`);
     return;
   }
-  const code = fs.readFileSync(filePath, 'utf8');
+  const code = fs.readFileSync(filePath, "utf8");
   let ast;
   try {
-    ast = parser.parse(code, { sourceType: 'module', plugins: ['jsx'] });
+    ast = parser.parse(code, { sourceType: "module", plugins: ["jsx"] });
   } catch (err) {
     console.error("Parse error:", err);
     return;
   }
   const result = analyzeComplexity(ast);
-  console.log('Итоговая вычисленная сложность:', result.totalScore.toFixed(2));
-//   console.log('Function Complexity Details:');
-//   result.functionComplexities.forEach(fn => {
-//     console.log(`${fn.name}: Cognitive = ${fn.cognitive}, Cyclomatic = ${fn.cyclomatic}`);
-//   });
-  if (result.totalScore < 10) console.log('Результат: Легкий по сложности файл');
-  else if (result.totalScore < 30) console.log('Результат: Средний по сложности файл');
-  else console.log('Результат: Тяжелый по сложности файл');
+  console.log("Итоговая вычисленная сложность:", result.totalScore.toFixed(2));
+  //   console.log('Function Complexity Details:');
+  //   result.functionComplexities.forEach(fn => {
+  //     console.log(`${fn.name}: Cognitive = ${fn.cognitive}, Cyclomatic = ${fn.cyclomatic}`);
+  //   });
+  if (result.totalScore < 10) console.log("Результат: Легкий по сложности файл");
+  else if (result.totalScore < 30) console.log("Результат: Средний по сложности файл");
+  else console.log("Результат: Тяжелый по сложности файл");
 }
 
 main();

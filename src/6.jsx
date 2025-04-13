@@ -25,9 +25,7 @@ const initialFilter = {
 };
 
 export const MyContacts = () => {
-  const [request, setRequest] = useState<SearchRequest<ContactFilter>>(
-    initialFilter
-  );
+  const [request, setRequest] = useState < SearchRequest < ContactFilter >> initialFilter;
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -35,9 +33,7 @@ export const MyContacts = () => {
   const contacts = useSelector(contactsSelectors.myContacts);
   const isLoading = useSelector(contactsSelectors.isLoading);
 
-  const [searchType, setSearchType] = useState<ContactsSearchType>(
-    ContactsSearchType.all
-  );
+  const [searchType, setSearchType] = useState < ContactsSearchType > ContactsSearchType.all;
 
   const handleSearch = useCallback(
     (pattern) => {
@@ -136,14 +132,17 @@ export const MyContacts = () => {
         />
       </Container>
 
-      <ContactsFilter
-        searchType={searchType}
-        setSearchType={onSearchTypeChange}
-        isMyContacts={true}
-      />
+      <ContactsFilter searchType={searchType} setSearchType={onSearchTypeChange} isMyContacts={true} />
     </ContactsLayout>
   );
 };
+
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                    16.79
+// GrokAI                      4                     22
+// Code Metrics                24                     -
+// SonarCube                   11                     1
+// Потапов                     -                   ~25-27
 
 const Container = styled.div`
   width: 100%;
