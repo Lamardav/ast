@@ -359,7 +359,7 @@ function analyzeComplexity(ast) {
 }
 
 function main() {
-  const filePath = path.resolve(__dirname, '10.jsx');
+  const filePath = path.resolve(__dirname, '11.js');
   if (!fs.existsSync(filePath)) {
     console.error(`File not found: ${filePath}`);
     return;
