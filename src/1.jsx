@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   background-color: #f0f0f0;
@@ -23,12 +23,19 @@ const ButtonCommon = styled.button`
 `;
 
 const MyComponent = () => {
-    return (
-        <Container>
-            <Title>Привет, мир!</Title>
-            <ButtonCommon>Нажми меня</ButtonCommon>
-        </Container>
-    );
+  return (
+    <Container>
+      <Title>Привет, мир!</Title>
+      <ButtonCommon>Нажми меня</ButtonCommon>
+    </Container>
+  );
 };
 
 export default MyComponent;
+
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                   1.3
+// GrokAI                      1                    0
+// Code Metrics                5                    -
+// SonarCube                   1                    0
+// Потапов                     0                    1

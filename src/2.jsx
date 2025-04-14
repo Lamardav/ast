@@ -1,7 +1,7 @@
 // ComplexComponent.js
 
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled, { keyframes } from "styled-components";
 
 // Определение анимации появления для контейнера
 const fadeIn = keyframes`
@@ -42,7 +42,7 @@ const SidebarItem = styled.div`
     background: #34495e;
   }
   transition: background 0.3s ease;
-  ${props => props.active && `background: #1abc9c;`}
+  ${(props) => props.active && `background: #1abc9c;`}
 `;
 
 // Основной контент
@@ -122,8 +122,8 @@ const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: ${props => (props.show ? 'flex' : 'none')};
+  background: rgba(0, 0, 0, 0.5);
+  display: ${(props) => (props.show ? "flex" : "none")};
   justify-content: center;
   align-items: center;
 `;
@@ -261,28 +261,24 @@ const CalendarGrid = styled.div`
 // Главный компонент приложения
 const ComplexComponent = () => {
   // Состояния для боковой панели, карточек, модального окна и статистики
-  const [activeSidebarItem, setActiveSidebarItem] = useState('dashboard');
+  const [activeSidebarItem, setActiveSidebarItem] = useState("dashboard");
   const [cards, setCards] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalContent, setModalContent] = useState('');
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState("");
   const [stats, setStats] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Имитируем загрузку данных при монтировании компонента
   useEffect(() => {
     const initialCards = [
-      { id: 1, title: 'Карточка 1', content: 'Содержание карточки 1' },
-      { id: 2, title: 'Карточка 2', content: 'Содержание карточки 2' },
-      { id: 3, title: 'Карточка 3', content: 'Содержание карточки 3' },
+      { id: 1, title: "Карточка 1", content: "Содержание карточки 1" },
+      { id: 2, title: "Карточка 2", content: "Содержание карточки 2" },
+      { id: 3, title: "Карточка 3", content: "Содержание карточки 3" },
     ];
     setCards(initialCards);
 
-    const initialStats = [
-      'Посещений: 1200',
-      'Новых сообщений: 45',
-      'Активных пользователей: 300',
-    ];
+    const initialStats = ["Посещений: 1200", "Новых сообщений: 45", "Активных пользователей: 300"];
     setStats(initialStats);
   }, []);
 
@@ -307,8 +303,8 @@ const ComplexComponent = () => {
   // Закрытие модального окна и сброс значений
   const handleModalClose = () => {
     setShowModal(false);
-    setModalTitle('');
-    setModalContent('');
+    setModalTitle("");
+    setModalContent("");
   };
 
   // Отправка формы модального окна
@@ -338,49 +334,34 @@ const ComplexComponent = () => {
     <>
       <Container>
         <Sidebar>
-          <SidebarItem
-            active={activeSidebarItem === 'dashboard'}
-            onClick={() => handleSidebarClick('dashboard')}
-          >
+          <SidebarItem active={activeSidebarItem === "dashboard"} onClick={() => handleSidebarClick("dashboard")}>
             Панель управления
           </SidebarItem>
-          <SidebarItem
-            active={activeSidebarItem === 'profile'}
-            onClick={() => handleSidebarClick('profile')}
-          >
+          <SidebarItem active={activeSidebarItem === "profile"} onClick={() => handleSidebarClick("profile")}>
             Профиль
           </SidebarItem>
-          <SidebarItem
-            active={activeSidebarItem === 'settings'}
-            onClick={() => handleSidebarClick('settings')}
-          >
+          <SidebarItem active={activeSidebarItem === "settings"} onClick={() => handleSidebarClick("settings")}>
             Настройки
           </SidebarItem>
-          <SidebarItem
-            active={activeSidebarItem === 'reports'}
-            onClick={() => handleSidebarClick('reports')}
-          >
+          <SidebarItem active={activeSidebarItem === "reports"} onClick={() => handleSidebarClick("reports")}>
             Отчеты
           </SidebarItem>
-          <SidebarItem
-            active={activeSidebarItem === 'help'}
-            onClick={() => handleSidebarClick('help')}
-          >
+          <SidebarItem active={activeSidebarItem === "help"} onClick={() => handleSidebarClick("help")}>
             Помощь
           </SidebarItem>
         </Sidebar>
         <MainContent>
           <Header>
             <Title>
-              {activeSidebarItem === 'dashboard'
-                ? 'Панель управления'
-                : activeSidebarItem === 'profile'
-                ? 'Профиль пользователя'
-                : activeSidebarItem === 'settings'
-                ? 'Настройки'
-                : activeSidebarItem === 'reports'
-                ? 'Отчеты'
-                : 'Помощь'}
+              {activeSidebarItem === "dashboard"
+                ? "Панель управления"
+                : activeSidebarItem === "profile"
+                ? "Профиль пользователя"
+                : activeSidebarItem === "settings"
+                ? "Настройки"
+                : activeSidebarItem === "reports"
+                ? "Отчеты"
+                : "Помощь"}
             </Title>
             <Button onClick={handleAddCard}>Добавить карточку</Button>
           </Header>
@@ -393,7 +374,7 @@ const ComplexComponent = () => {
             ))}
           </ContentArea>
           {/* Панель статистики отображается только для панели управления */}
-          {activeSidebarItem === 'dashboard' && (
+          {activeSidebarItem === "dashboard" && (
             <StatsPanel>
               <StatsTitle>Статистика</StatsTitle>
               <StatsList>
@@ -404,17 +385,13 @@ const ComplexComponent = () => {
             </StatsPanel>
           )}
           {/* Простейший календарь */}
-          {activeSidebarItem === 'dashboard' && (
+          {activeSidebarItem === "dashboard" && (
             <CalendarPanel>
-              <CalendarTitle>
-                Календарь (Текущая дата: {currentDate.toLocaleDateString()})
-              </CalendarTitle>
+              <CalendarTitle>Календарь (Текущая дата: {currentDate.toLocaleDateString()})</CalendarTitle>
               <CalendarGrid>{renderCalendarDays()}</CalendarGrid>
             </CalendarPanel>
           )}
-          <Footer>
-            © 2025 Все права защищены. Создано с использованием React и Styled Components.
-          </Footer>
+          <Footer>© 2025 Все права защищены. Создано с использованием React и Styled Components.</Footer>
         </MainContent>
       </Container>
       <ModalOverlay show={showModal}>
@@ -423,21 +400,11 @@ const ComplexComponent = () => {
           <form onSubmit={handleModalSubmit}>
             <FormGroup>
               <FormLabel htmlFor="title">Заголовок</FormLabel>
-              <Input
-                id="title"
-                type="text"
-                value={modalTitle}
-                onChange={(e) => setModalTitle(e.target.value)}
-              />
+              <Input id="title" type="text" value={modalTitle} onChange={(e) => setModalTitle(e.target.value)} />
             </FormGroup>
             <FormGroup>
               <FormLabel htmlFor="content">Содержание</FormLabel>
-              <TextArea
-                id="content"
-                rows="4"
-                value={modalContent}
-                onChange={(e) => setModalContent(e.target.value)}
-              />
+              <TextArea id="content" rows="4" value={modalContent} onChange={(e) => setModalContent(e.target.value)} />
             </FormGroup>
             <Button type="submit">Сохранить</Button>
           </form>
@@ -454,3 +421,10 @@ const ComplexComponent = () => {
 // Компонент можно расширить для более сложной логики и интеграции с серверной частью приложения.
 
 export default ComplexComponent;
+
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                   36.43
+// GrokAI                      16                   14
+// Code Metrics                66                    -
+// SonarCube                   32                   15
+// Потапов                     -                    40

@@ -12,27 +12,18 @@ import { CompanySearch } from "./components/CompanySearch";
 import { EmployerSearch } from "./components/EmployerSearch";
 import { UserSearch } from "./components/UserSearch";
 import { VacancySearch } from "./components/VacancySearch";
-import {
-  initialSearchFilter,
-  initialTotalFilter,
-  newSearchPaged,
-} from "./consts";
+import { initialSearchFilter, initialTotalFilter, newSearchPaged } from "./consts";
 import { contactsActionsAsync } from "./contactsActionsAsync";
 import { scrollableTargetId } from "./components/ContactsLayout";
-
 
 export const useSearchContactFilter = () => {
   const dispatch = useDispatch();
 
-  const [searchType, setSearchType] = useState<ContactsSearchType>(
-    ContactsSearchType.all
-  );
+  const [searchType, setSearchType] = useState < ContactsSearchType > ContactsSearchType.all;
 
-  const [totalFilter, setTotalFilter] = useState<SearchProfileRequest>(
-    initialTotalFilter
-  );
+  const [totalFilter, setTotalFilter] = useState < SearchProfileRequest > initialTotalFilter;
 
-  const [filters, setFilters] = useState<SearchFilter>(initialSearchFilter);
+  const [filters, setFilters] = useState < SearchFilter > initialSearchFilter;
 
   const handleSearch = useCallback((filter) => {
     setTotalFilter({ ...initialTotalFilter, filter });
@@ -64,9 +55,7 @@ export const useSearchContactFilter = () => {
 
   const handleSearchTypeSet = useCallback(
     (type) => {
-      document
-        .getElementById(scrollableTargetId)
-        ?.scrollTo({ top: 0, behavior: "smooth" });
+      document.getElementById(scrollableTargetId)?.scrollTo({ top: 0, behavior: "smooth" });
       setFilters({
         ...initialSearchFilter,
         private: {
@@ -101,28 +90,23 @@ export const useSearchContactFilter = () => {
     [totalFilter]
   );
 
-  const setFilter = useCallback(
-    (filter, type) => {
-      if (type === ContactsSearchType.all) {
-        return;
-      }
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        [type]: {
-          ...prevFilter[type],
-          filter: { ...prevFilter[type].filter, ...filter },
-        },
-      }));
-    },
-    []
-  );
+  const setFilter = useCallback((filter, type) => {
+    if (type === ContactsSearchType.all) {
+      return;
+    }
+    setFilters((prevFilter) => ({
+      ...prevFilter,
+      [type]: {
+        ...prevFilter[type],
+        filter: { ...prevFilter[type].filter, ...filter },
+      },
+    }));
+  }, []);
 
   useEffect(() => {
     if (searchType === ContactsSearchType.all) {
       dispatch(contactsActionsAsync.searchTotal(totalFilter, { abort: true }));
-      dispatch(
-        vacancyActionsAsync.publicSearch(filters.vacancies, { abort: true })
-      );
+      dispatch(vacancyActionsAsync.publicSearch(filters.vacancies, { abort: true }));
     }
   }, [dispatch, searchType, totalFilter, filters.vacancies]);
 
@@ -158,3 +142,9 @@ export const useSearchContactFilter = () => {
     },
   };
 };
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                    10,09
+// GrokAI                      7                    5
+// Code Metrics                11                   -
+// SonarCube                   9                    2
+// Потапов                     1                    18

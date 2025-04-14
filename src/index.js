@@ -3,6 +3,8 @@ const path = require("path");
 const parser = require("@babel/parser");
 const traverse = require("@babel/traverse").default;
 
+//добавить подсчет сложности для хуков мемоизированных функций VariableDeclarator => callee хук ?  => поседний аругмент  если ArrayExpression колличество элементов в массиве * 0.5
+
 const PRESENTATION_WEIGHTS = {
   simpleJSX: 0.2,
   jsxWithProps: 0.3,
@@ -386,7 +388,7 @@ function analyzeComplexity(ast) {
 }
 
 function main() {
-  const filePath = path.resolve(__dirname, "3.jsx");
+  const filePath = path.resolve(__dirname, "10.jsx");
   if (!fs.existsSync(filePath)) {
     console.error(`File not found: ${filePath}`);
     return;
