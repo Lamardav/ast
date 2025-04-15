@@ -32,3 +32,4 @@ export const Company = () => {
 // Code Metrics                9                     -
 // SonarCube                   2                     0
 // Потапов                     2                     4
+// Шпаков                      -                     3

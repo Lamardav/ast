@@ -27,5 +27,6 @@ const Container = styled.div`
 // Наша                        -                   5.98
 // GrokAI                      3                    3
 // Code Metrics                8                   -
-// SonarCube                   7                    5
+// SonarCube                   7                   5
 // Потапов                     -                   5
+// Шпаков                      -                   5

@@ -54,5 +54,6 @@ export default store;
 // Наша                        -                   8.01
 // GrokAI                      2                     10
 // Code Metrics                -                     -
-// SonarCube                   4                      0
-// Потапов                     -                      7
+// SonarCube                   4                     0
+// Потапов                     -                     7
+// Шпаков                      -                     8

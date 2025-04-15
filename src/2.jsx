@@ -428,3 +428,4 @@ export default ComplexComponent;
 // Code Metrics                66                    -
 // SonarCube                   32                   15
 // Потапов                     -                    40
+// Шпаков                      -                    40

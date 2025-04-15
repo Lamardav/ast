@@ -137,13 +137,6 @@ export const MyContacts = () => {
   );
 };
 
-// Источник оценки     || Цикломатическая    ||  Когнитивная
-// Наша                        -                    16.79
-// GrokAI                      4                     22
-// Code Metrics                24                     -
-// SonarCube                   11                     1
-// Потапов                     -                   ~25-27
-
 const Container = styled.div`
   width: 100%;
   max-width: 644px;
@@ -159,3 +152,13 @@ const Container = styled.div`
     margin: 0px;
   }
 `;
+
+
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                    16.79
+// GrokAI                      4                     22
+// Code Metrics                24                     -
+// SonarCube                   11                     1
+// Потапов                     -                   ~25-27
+// Шпаков                      -                     15
+

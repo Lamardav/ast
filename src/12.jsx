@@ -173,4 +173,5 @@ const Pointer = styled.p<{ active: boolean }>`
 // Code Metrics                24                   -
 // SonarCube                   -                   -
 // Потапов                     -                   28
+// Шпаков                      -                   20
 // https://spartak.com/academy/contacts

@@ -148,3 +148,4 @@ export const useSearchContactFilter = () => {
 // Code Metrics                11                   -
 // SonarCube                   9                    2
 // Потапов                     1                    18
+// Шпаков                      -                    20

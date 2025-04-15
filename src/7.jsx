@@ -62,4 +62,5 @@ export const debouceTimeOut = 300;
 // GrokAI                      1                    0
 // Code Metrics                0                    -
 // SonarCube                   0                    0
-// Потапов                     1                    0
+// Потапов                     1                    1
+// Шпаков                      -                    1

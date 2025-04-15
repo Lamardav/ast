@@ -27,3 +27,4 @@ export const metricReducer =
 // Code Metrics                -                    -
 // SonarCube                   3                    0
 // Потапов                     3                    5 (reducerWithInitialState)
+// Шпаков                      -                    2

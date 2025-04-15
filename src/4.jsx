@@ -67,3 +67,4 @@ export default ComplexLogicComponent;
 // Code Metrics                26                     -
 // SonarCube                   14                     7
 // Потапов                     -                     18
+// Шпаков                      -                     12
