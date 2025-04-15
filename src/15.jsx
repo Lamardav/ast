@@ -711,7 +711,7 @@ export const EmailForm = ({
 // Наша                        -                   63,72
 // GrokAI                      29                   38
 // Code Metrics                38                   -
-// SonarCube                   0                    0
+// SonarCube                   68                   16
 // Потапов                     -                    70
 // Шпаков                      -                    80
 

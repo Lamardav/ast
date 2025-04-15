@@ -196,7 +196,7 @@ const ForgotPassButton = styled.span`
 // Наша                        -                   17,26
 // GrokAI                      10                   12
 // Code Metrics                38                   -
-// SonarCube                   0                    0
+// SonarCube                   17                    5
 // Потапов                     -                    35
 // Шпаков                      -                    30
 

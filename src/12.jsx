@@ -171,7 +171,7 @@ const Pointer = styled.p<{ active: boolean }>`
 // Наша                        -                   25.38
 // GrokAI                      8                    12
 // Code Metrics                24                   -
-// SonarCube                   -                   -
+// SonarCube                   30                   9
 // Потапов                     -                   28
 // Шпаков                      -                   20
 // https://spartak.com/academy/contacts

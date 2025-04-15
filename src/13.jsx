@@ -567,7 +567,7 @@ const StyledDrawer = styled(Drawer)`
 // Наша                        -                   222,01
 // GrokAI (ChstGPT)           32(70-90)            48(35-45)
 // Code Metrics               154                  -
-// SonarCube                   -                   -
+// SonarCube                   119                 104
 // Потапов                     -                    95
 // Шпаков                      -                   150
 //https://admin-stage-new.gorpay.online/customers/notifications test@gmail.com 005
