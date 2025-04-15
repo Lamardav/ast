@@ -32,3 +32,12 @@ const MyComponent = () => {
 };
 
 export default MyComponent;
+
+// Источник оценки     || Цикломатическая    ||  Когнитивная
+// Наша                        -                   1.3
+// GrokAI                      1                   0
+// Code Metrics                5                    -
+// SonarCube                   1                   0
+// Потапов                     -                   1.1
+// Шпаков                      -                   1.1
+
