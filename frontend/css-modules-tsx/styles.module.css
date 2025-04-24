@@ -1,0 +1,74 @@
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fdf2f8;
+  border-radius: 8px;
+}
+
+.title {
+  text-align: center;
+  color: #be185d;
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #fbcfe8;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn.add {
+  background-color: #ec4899;
+  color: white;
+}
+
+.btn.add:hover {
+  background-color: #db2777;
+}
+
+.btn.delete {
+  background-color: #f43f5e;
+  color: white;
+}
+
+.btn.delete:hover {
+  background-color: #e11d48;
+}
+
+.todoList {
+  list-style: none;
+  padding: 0;
+}
+
+.todoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.todoItem.completed {
+  background-color: #fce7f3;
+  text-decoration: line-through;
+}
