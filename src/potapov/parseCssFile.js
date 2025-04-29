@@ -36,7 +36,6 @@ async function example() {
   }
 }
 
-// Раскомментируйте для тестирования
 example();
 
 module.exports = parseCssFile;

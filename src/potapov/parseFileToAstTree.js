@@ -2,11 +2,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const { parse } = require("@babel/parser");
 
-const countReactHooks = require("./countReactHooks");
-const countVariables = require("./countVariables");
-
-const analyzeFunctions = require("./analyzeFunctions");
-async function getAstFromFile(filePath) {
+async function parseFileToAstTree(filePath) {
   try {
     // Проверяем, существует ли файл
     const absolutePath = path.resolve(filePath);
@@ -49,23 +45,4 @@ async function getAstFromFile(filePath) {
   }
 }
 
-// Пример использования
-async function getDataFromAstTree() {
-  const filePath = path.resolve(__dirname, "13.jsx");
-  try {
-    const { ast } = await getAstFromFile(filePath);
-    const hooks = countReactHooks(ast);
-    const variables = countVariables(ast);
-    const funkInfo = analyzeFunctions(ast);
-
-    console.log(hooks);
-    console.log(variables);
-    console.log(funkInfo);
-
-    // console.log(JSON.stringify(ast, null, 2));
-  } catch (error) {
-    console.error(error.message);
-  }
-}
-
-getDataFromAstTree();
+module.exports = parseFileToAstTree;
