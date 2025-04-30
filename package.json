@@ -1,5 +1,5 @@
 {
-  "name":  "dex-product-frontend",
+  "name": "dex-product-frontend",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -9,6 +9,8 @@
   "dependencies": {
     "@babel/parser": "^7.27.0",
     "@babel/traverse": "^7.27.0",
+    "postcss": "^8.5.3",
+    "postcss-scss": "^4.0.9",
     "react": "^19.1.0"
   },
   "devDependencies": {

@@ -1,0 +1,74 @@
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #eff6ff;
+  border-radius: 8px;
+}
+
+.title {
+  text-align: center;
+  color: #1e40af;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+@nest .btn.add {
+  background-color: #3b82f6;
+  color: white;
+}
+
+@nest .btn.add:hover {
+  background-color: #2563eb;
+}
+
+@nest .btn.delete {
+  background-color: #1e3a8a;
+  color: white;
+}
+
+@nest .btn.delete:hover {
+  background-color: #1e40af;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+@nest .todo-item.completed {
+  background-color: #dbeafe;
+  text-decoration: line-through;
+}

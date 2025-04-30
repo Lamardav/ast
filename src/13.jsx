@@ -4,7 +4,7 @@ import TextArea from "antd/es/input/TextArea";
 import {
   addNotificationAwait,
   updateNotificationAwait,
-  addFileForPushNotificationAwait
+  addFileForPushNotificationAwait,
 } from "../../../store/asyncActions/customers/notificationsAwait";
 import { useActions } from "../../../common/helpers/useActions";
 import { FormLinksItem } from "../../../common/components/FormLinksItem";
@@ -17,22 +17,23 @@ import { validationCsvFiles } from "../../../common/helpers/commonValidators/val
 import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam } from "antd/es/upload/interface";
 import { RadioChangeEvent } from "antd/es";
-import { IUseGroupMunicipalitiesResponse, useGroupMunicipalities } from "../../referencesComponents/groups/hooks/useGroupMunicipalities";
+import {
+  IUseGroupMunicipalitiesResponse,
+  useGroupMunicipalities,
+} from "../../referencesComponents/groups/hooks/useGroupMunicipalities";
 import { SelectGroupMunicipalities } from "../../referencesComponents/groups/usageGroups/SelectGroupMunicipalities";
 import { GroupMunicipalityForm } from "../../referencesComponents/groups/GroupMunicipalityForm";
-
-
 
 const osOptions = [
   { label: "Android", value: "Android" },
   { label: "IOS", value: "IOS" },
-  { label: "Huawei", value: "Huawei" }
+  { label: "Huawei", value: "Huawei" },
 ];
 
 const actionCreator = {
   addNotificationAwait,
   addFileForPushNotificationAwait,
-  updateNotificationAwait
+  updateNotificationAwait,
 };
 const getOsRules = (flag) => {
   if (flag !== "file") {
@@ -69,25 +70,24 @@ const getInitRadioButtonValue = (notif) => {
   return "isNoRegions";
 };
 
-// eslint-disable-next-line complexity
 export const NotificationForm = ({ notification, onClose, allMunicipalities }) => {
   const [value, setValue] = useState([]);
-  const [considerMunicipalityTimezone, setConsiderMunicipalityTimezone] = useState<boolean>(
-    notification?.considerMunicipalityTimezone === true ? true : false
-  );
-  const [linkItemValue, setLinkValue] = useState<{ typeLink: string, linkValue: string } | {}>({});
-  const [isChanged, setIsChanged] = useState<boolean>(false);
+  const [considerMunicipalityTimezone, setConsiderMunicipalityTimezone] =
+    useState < boolean > (notification?.considerMunicipalityTimezone === true ? true : false);
+  const [linkItemValue, setLinkValue] = (useState < { typeLink: string, linkValue: string }) | ({} > {});
+  const [isChanged, setIsChanged] = useState < boolean > false;
   const [activeMunicipalitesRadio, setActiveMunicipalitesRadio] = useState("isNoRegions");
   const [form] = Form.useForm();
   const [uploadedFiles, setUploadedFiles] = useState();
-  const [isPushFromFileOrParametres, setIsPushFromFileOrParametres] = useState<"file" | "parametres" | null>(null);
+  const [isPushFromFileOrParametres, setIsPushFromFileOrParametres] =
+    (useState < "file") | "parametres" | (null > null);
   const {
     formUpdateGroupMunicipalitiesDrawer,
     groupMunicipalitiesForUpdate,
     groupMunicipalitiesOptions,
     handleSelectGroupMunicipalities,
     setFormUpdateGroupMunicipalitiesDrawer,
-    setGroupMunicipalitiesForUpdate
+    setGroupMunicipalitiesForUpdate,
   } = useGroupMunicipalities();
 
   useEffect(() => {
@@ -128,7 +128,7 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
   const {
     addNotificationAwait: addNewNotificationAwait,
     updateNotificationAwait: updateCurrentNotificationAwait,
-    addFileForPushNotificationAwait: addPushFromFileNotificationAwait
+    addFileForPushNotificationAwait: addPushFromFileNotificationAwait,
   } = useActions(actionCreator);
 
   const closeDrawer = () => {
@@ -184,15 +184,20 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
             groupInfoView: undefined,
             isGroupView: undefined,
             municipalityTotalCount: undefined,
-            tpsRegions: activeMunicipalitesRadio ? (activeMunicipalitesRadio === "isTpsRegions" ? true : false) : !!notification.tpsRegions,
+            tpsRegions: activeMunicipalitesRadio
+              ? activeMunicipalitesRadio === "isTpsRegions"
+                ? true
+                : false
+              : !!notification.tpsRegions,
             ...data,
             ...linkItemValue,
-            considerMunicipalityTimezone: activeMunicipalitesRadio === "isNoRegions" ? false : considerMunicipalityTimezone,
+            considerMunicipalityTimezone:
+              activeMunicipalitesRadio === "isNoRegions" ? false : considerMunicipalityTimezone,
             municipality: municipalites,
             municipalityGroups,
-            sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc)
+            sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc),
           },
-          sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc)
+          sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc),
         });
       } else if ("file" in values) {
         const formData = new FormData();
@@ -206,8 +211,9 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
           municipality: activeMunicipalitesRadio === "isCheckedRegions" ? values.municipality : [],
           municipalityGroups: activeMunicipalitesRadio === "isCheckedRegions" ? values.municipalityGroups : [],
           ...linkItemValue,
-          considerMunicipalityTimezone: (activeMunicipalitesRadio !== "isNoRegions" ? considerMunicipalityTimezone : false) || false,
-          sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc)
+          considerMunicipalityTimezone:
+            (activeMunicipalitesRadio !== "isNoRegions" ? considerMunicipalityTimezone : false) || false,
+          sendTimeUtc: values.sendTimeUtc && getISOStringByMSCUtc(values.sendTimeUtc),
         });
       }
       closeDrawer();
@@ -234,16 +240,11 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
     setActiveMunicipalitesRadio(e.target.value);
   };
 
-  // useEffect(() => {
-  //   notification?.municipality && setActiveMunicipalitesRadio(undefined);
-  //   form.resetFields();
-  // }, [!!notification, notification]);
-
   const options = useMemo(
     () => [
       ...allMunicipalities.map((municipality) => {
         return { label: municipality.name, value: municipality.id };
-      })
+      }),
     ],
     [allMunicipalities]
   );
@@ -260,9 +261,24 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
     }
   }, [isPushFromFileOrParametres]);
 
+  //проверка анализа функций / рекурсивных функций
+  function fibonacci(n) {
+    if (n <= 0) return 0;
+    if (n === 1) return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+  }
+  const fibonacci2 = async (n, d, f, g, h, j, e) => {
+    const t = 12;
+    if (n <= 0) return 0;
+    if (n === 1) return 1;
+    return fibonacci2(n - 1) + fibonacci2(n - 2);
+  };
+
   return (
     <StyledDrawer
-      title={`${notification?.hasOwnProperty("id") ? "Редактирование" : "Создание"} ${notification?.type ?? "none"} - уведомления`}
+      title={`${notification?.hasOwnProperty("id") ? "Редактирование" : "Создание"} ${
+        notification?.type ?? "none"
+      } - уведомления`}
       closable={false}
       destroyOnClose={true}
       onClose={() => !isChanged && closeDrawer()}
@@ -271,7 +287,7 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
       footer={
         <div
           style={{
-            textAlign: "right"
+            textAlign: "right",
           }}
         >
           <Button onClick={closeDrawer} style={{ marginRight: 8 }}>
@@ -289,14 +305,14 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
             style={{
               textAlign: "left",
               marginBottom: "8px",
-              width: "100%"
+              width: "100%",
             }}
           >
             <Button
               onClick={() => setIsPushFromFileOrParametres("parametres")}
               type={isPushFromFileOrParametres === "parametres" ? "primary" : "default"}
               style={{
-                width: "50%"
+                width: "50%",
               }}
             >
               По параметрам
@@ -305,7 +321,7 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
               onClick={() => setIsPushFromFileOrParametres("file")}
               type={isPushFromFileOrParametres === "file" ? "primary" : "default"}
               style={{
-                width: "50%"
+                width: "50%",
               }}
             >
               Из файла
@@ -319,12 +335,12 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
             rules={[
               {
                 required: true,
-                message: "Обязательное поле."
+                message: "Обязательное поле.",
               },
               {
                 max: 50,
-                message: "Превышено максимальное количество символов."
-              }
+                message: "Превышено максимальное количество символов.",
+              },
             ]}
             label={"Заголовок"}
             required={false}
@@ -343,12 +359,12 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
             rules={[
               {
                 required: true,
-                message: "Обязательное поле."
+                message: "Обязательное поле.",
               },
               {
                 max: 150,
-                message: "Превышено максимальное количество символов."
-              }
+                message: "Превышено максимальное количество символов.",
+              },
             ]}
             initialValue={notification?.message ?? ""}
           >
@@ -395,13 +411,13 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
                     } else {
                       return Promise.resolve();
                     }
-                  }
-                }
+                  },
+                },
               ]}
             >
               <StyledSelect
                 style={{
-                  marginTop: "12px"
+                  marginTop: "12px",
                 }}
                 {...selectProps("municipality", options, value, setValue, form, "Выберите регион", undefined, true)}
                 getPopupContainer={(trigger) => trigger.parentElement}
@@ -427,8 +443,8 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
                     } else {
                       return Promise.resolve();
                     }
-                  }
-                }
+                  },
+                },
               ]}
               style={{ width: "100%", marginBottom: 0 }}
             >
@@ -451,8 +467,8 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
               required={false}
               rules={[
                 {
-                  validator: validationCsvFiles
-                }
+                  validator: validationCsvFiles,
+                },
               ]}
               label="Файл"
             >
@@ -468,7 +484,7 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
                   e.file && form.setFieldValue("file", e.file.originFileObj);
                 }}
                 showUploadList={{
-                  showDownloadIcon: false
+                  showDownloadIcon: false,
                 }}
               >
                 <Button icon={<UploadOutlined />}>Загрузить файл</Button>
@@ -499,7 +515,7 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
               name={"considerMunicipalityTimezone"}
               style={{
                 marginTop: "-10px",
-                marginBottom: "2px"
+                marginBottom: "2px",
               }}
             >
               <Checkbox
@@ -522,16 +538,21 @@ export const NotificationForm = ({ notification, onClose, allMunicipalities }) =
                     if (considerMunicipalityTimezone) {
                       return validateDateByUtc(_, time, {
                         tpsRegions: activeMunicipalitesRadio === "isTpsRegions",
-                        municipalites: form.getFieldValue("municipality")
+                        municipalites: form.getFieldValue("municipality"),
                       });
                     } else {
                       return validationDate(_, time);
                     }
-                  }
-                }
+                  },
+                },
               ]}
             >
-              <DatePicker placeholder={"Выберите дату и время"} style={{ width: "100%" }} format="DD-MM-YYYY HH:mm" showTime />
+              <DatePicker
+                placeholder={"Выберите дату и время"}
+                style={{ width: "100%" }}
+                format="DD-MM-YYYY HH:mm"
+                showTime
+              />
             </Form.Item>
           </>
         )}
